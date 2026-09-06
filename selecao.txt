@@ -1,0 +1,40 @@
+# Curadoria manual das fotos baixadas: <classe>/<arquivo>  <n_recortes>
+# Fotos nao listadas aqui foram descartadas (fora de foco, objeto no lugar da
+# textura, cartas de ruido, gravuras, etc.). Se o grupo usar fotos proprias,
+# basta apagar este arquivo: o preparo passa a usar todas as fotos da pasta.
+asfalto/asfalto_02.jpg          2
+asfalto/asfalto_11.jpg          2
+asfalto/asfalto_13.jpg          1
+brita/brita_00.jpg              2
+brita/brita_06.jpg              2
+brita/brita_07.jpg              1
+calcada/calcada_01.jpg          1
+calcada/calcada_02.jpg          1
+calcada/calcada_03.jpg          1
+calcada/calcada_09.jpg          1
+calcada/calcada_10.jpg          1
+concreto/concreto_00.jpg        1
+concreto/concreto_05.jpg        1
+concreto/concreto_06.jpg        1
+concreto/concreto_08.jpg        1
+concreto/concreto_11.jpg        1
+madeira/madeira_00.jpg          1
+madeira/madeira_01.jpg          1
+madeira/madeira_08.jpg          1
+madeira/madeira_09.jpg          1
+madeira/madeira_14.jpg          1
+paralelepipedo/paralelepipedo_00.jpg  1
+paralelepipedo/paralelepipedo_01.jpg  1
+paralelepipedo/paralelepipedo_04.jpg  1
+paralelepipedo/paralelepipedo_05.jpg  1
+paralelepipedo/paralelepipedo_08.jpg  1
+telha/telha_04.jpg              1
+telha/telha_06.jpg              1
+telha/telha_07.jpg              1
+telha/telha_08.jpg              1
+telha/telha_11.jpg              1
+tijolo/tijolo_01.jpg            1
+tijolo/tijolo_02.jpg            1
+tijolo/tijolo_03.jpg            1
+tijolo/tijolo_07.jpg            1
+tijolo/tijolo_08.jpg            1

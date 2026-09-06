@@ -1,0 +1,46 @@
+__pycache__/
+*.pyc
+saida/*.npy
+saida/*.npz
+
+# Das 89 fotos candidatas baixadas, so as 36 aprovadas em selecao.txt entram no
+# repositorio -- versionar as descartadas custaria 150 MB sem servir para nada.
+# Para rever as descartadas, rode src/baixar_imagens.py de novo.
+fotos_originais/*/*
+!fotos_originais/creditos.csv
+!fotos_originais/asfalto/asfalto_02.jpg
+!fotos_originais/asfalto/asfalto_11.jpg
+!fotos_originais/asfalto/asfalto_13.jpg
+!fotos_originais/brita/brita_00.jpg
+!fotos_originais/brita/brita_06.jpg
+!fotos_originais/brita/brita_07.jpg
+!fotos_originais/calcada/calcada_01.jpg
+!fotos_originais/calcada/calcada_02.jpg
+!fotos_originais/calcada/calcada_03.jpg
+!fotos_originais/calcada/calcada_09.jpg
+!fotos_originais/calcada/calcada_10.jpg
+!fotos_originais/concreto/concreto_00.jpg
+!fotos_originais/concreto/concreto_05.jpg
+!fotos_originais/concreto/concreto_06.jpg
+!fotos_originais/concreto/concreto_08.jpg
+!fotos_originais/concreto/concreto_11.jpg
+!fotos_originais/madeira/madeira_00.jpg
+!fotos_originais/madeira/madeira_01.jpg
+!fotos_originais/madeira/madeira_08.jpg
+!fotos_originais/madeira/madeira_09.jpg
+!fotos_originais/madeira/madeira_14.jpg
+!fotos_originais/paralelepipedo/paralelepipedo_00.jpg
+!fotos_originais/paralelepipedo/paralelepipedo_01.jpg
+!fotos_originais/paralelepipedo/paralelepipedo_04.jpg
+!fotos_originais/paralelepipedo/paralelepipedo_05.jpg
+!fotos_originais/paralelepipedo/paralelepipedo_08.jpg
+!fotos_originais/telha/telha_04.jpg
+!fotos_originais/telha/telha_06.jpg
+!fotos_originais/telha/telha_07.jpg
+!fotos_originais/telha/telha_08.jpg
+!fotos_originais/telha/telha_11.jpg
+!fotos_originais/tijolo/tijolo_01.jpg
+!fotos_originais/tijolo/tijolo_02.jpg
+!fotos_originais/tijolo/tijolo_03.jpg
+!fotos_originais/tijolo/tijolo_07.jpg
+!fotos_originais/tijolo/tijolo_08.jpg

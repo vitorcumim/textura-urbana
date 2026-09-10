@@ -4,7 +4,15 @@ O mesmo trabalho no formato de artigo da Sociedade Brasileira de Computação:
 A4, coluna única, Times 12 pt, `abstract` e `resumo` na primeira página,
 bibliografia pelo estilo `sbc`.
 
-Saída pronta: [`artigo.pdf`](artigo.pdf) — 11 páginas, 8 figuras, 2 tabelas.
+Saída pronta: [`artigo.pdf`](artigo.pdf) — 6 páginas, 3 figuras, 2 tabelas.
+
+Uma versão anterior tinha 11 páginas e 8 figuras. Foi encurtada de propósito:
+saíram as figuras dos mapas de resposta, da curva do cotovelo, da matriz de
+confusão, do detalhe da segmentação e da comparação entre bancos, além das
+subseções que as acompanhavam. Tudo isso continua nos relatórios longos, em
+[`relatorio/`](../relatorio/relatorio.pdf) e
+[`gaussianos/`](../gaussianos/relatorio_gaussianos.pdf), e as figuras seguem
+sendo geradas em `saida/`.
 
 ## Compilar
 
@@ -31,7 +39,7 @@ principal.
 | `artigo.bib` | as sete referências |
 | `sbc-template.sty` | o estilo oficial da SBC, copiado sem alteração |
 | `sbc.bst` | o estilo de bibliografia da SBC, copiado sem alteração |
-| `figuras/` | as figuras, copiadas de `saida/` e `gaussianos/saida/` |
+| `figuras/` | as três figuras usadas, copiadas de `saida/` |
 
 Os arquivos intermediários (`.aux`, `.log`, `.bbl`, `.blg`, `.out`) não são
 versionados.

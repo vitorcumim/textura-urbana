@@ -26,12 +26,10 @@
   filters --- four even-phase Gabor filters oriented at 0, 45, 90 and 135
   degrees, two odd-phase Gabor filters and one circular Laplacian of Gaussian
   --- applied over three levels of a Gaussian pyramid. Each region is
-  described by the mean filter response inside a window, rearranged as an
-  energy profile plus a total energy per scale. A hand-written Euclidean
-  k-means groups 40 grayscale crops of 512x512 pixels from eight urban
-  materials, reaching a purity of 0.58 against the photographed material. The
-  same descriptor, computed on 64x64 windows, segments the interior of each
-  image and tells mortar joints from brick faces.
+  described by the mean filter response inside a window. A hand-written
+  Euclidean k-means groups 40 grayscale crops of 512x512 pixels from eight
+  urban materials, reaching a purity of 0.58 against the photographed
+  material, and segments the interior of each image.
 \end{abstract}
 
 \begin{resumo}
@@ -39,12 +37,10 @@
   banco de sete filtros --- quatro Gabor de fase par nas orientações 0, 45, 90
   e 135 graus, dois Gabor de fase ímpar e um filtro circular (Laplaciano da
   gaussiana) --- aplicados em três escalas de uma pirâmide gaussiana. Cada
-  região é descrita pela média das respostas dentro de uma janela,
-  reorganizada em perfil de energia e energia total por escala. Um k-médias
+  região é descrita pela média das respostas dentro de uma janela. Um k-médias
   euclidiano escrito à mão agrupa 40 recortes de 512x512 pixels em tons de
   cinza, de oito materiais urbanos, com pureza de 0,58 em relação ao material
-  fotografado. O mesmo descritor, calculado em janelas de 64x64, segmenta o
-  interior das imagens e separa as juntas de argamassa das faces dos tijolos.
+  fotografado, e segmenta o interior de cada imagem.
 \end{resumo}
 
 \section{Introdução}
@@ -56,80 +52,47 @@ horizontais fortes e o asfalto não tem direção nenhuma. É essa diferença --
 como a intensidade varia no espaço, em que direção e em que tamanho --- que
 chamamos de textura.
 
-A estratégia clássica para medi-la é passar a imagem por um conjunto de
-filtros sintonizados em diferentes orientações e frequências e observar quanta
-energia cada um capta \cite{jain:91,randen:99}. Este trabalho segue essa
-receita, com filtros de Gabor \cite{gabor:46} e um filtro circular, e usa os
-vetores resultantes para duas tarefas: agrupar um conjunto de 40 imagens por
-semelhança de textura e segmentar o interior de cada imagem.
-
-Nenhuma etapa usa aprendizado de máquina: os filtros são fixos e projetados
-analiticamente, e o agrupamento é um k-médias euclidiano implementado
-diretamente. O código e as imagens estão em
-\url{https://github.com/vitorcumim/textura-urbana}.
+A estratégia clássica para medi-la é passar a imagem por filtros sintonizados
+em diferentes orientações e frequências e observar quanta energia cada um
+capta \cite{jain:91,randen:99}. Este trabalho segue essa receita, com filtros
+de Gabor \cite{gabor:46} e um filtro circular, para agrupar 40 imagens por
+semelhança de textura e segmentar o interior de cada uma. Nenhuma etapa usa
+aprendizado de máquina: os filtros são fixos e projetados analiticamente, e o
+agrupamento é um k-médias euclidiano implementado diretamente. O código e as
+imagens estão em \url{https://github.com/vitorcumim/textura-urbana}.
 
 \section{Conjunto de imagens}
 
 O conjunto é de texturas urbanas: asfalto, brita, calçada, concreto, madeira,
 paralelepípedo, telha e tijolo --- oito classes, cinco imagens cada, 40
-imagens no total.
-
-As fotos vieram do Wikimedia Commons, sob licenças livres (CC0, CC BY, CC BY-SA
-e domínio público). O arquivo \texttt{creditos.csv} do repositório registra
-título, autor, licença e endereço de origem de cada foto; ele é gerado por um
-script que confere o SHA-256 do arquivo local contra a imagem publicada, de
-modo que o crédito nunca seja atribuído à foto errada. Cabe a ressalva de que
-o enunciado pede fotos tiradas pelo próprio grupo, e estas não são; o código
-foi escrito de modo que a troca custe um comando.
-
-A busca textual do acervo é pouco confiável para este fim. Pedir
-\textit{chain link fence} devolve retratos de pessoas com uma cerca desfocada
-ao fundo, e \textit{asphalt texture} devolve cartas de ruído usadas para
-calibrar \textit{scanners}. Foram baixadas 89 fotos candidatas, todas
-submetidas a curadoria visual em folhas de contato; sobraram 36. Uma nona
-classe pretendida, grades metálicas, foi abandonada porque nenhuma das 16
-candidatas era utilizável.
+imagens no total. As fotos vieram do Wikimedia Commons, sob licenças livres,
+com autor e licença registrados no repositório; cabe a ressalva de que o
+enunciado pede fotos tiradas pelo próprio grupo, e estas não são. Foram
+baixadas 89 candidatas e todas passaram por curadoria visual, porque a busca
+textual do acervo é pouco confiável: pedir \textit{asphalt texture} devolve
+cartas de ruído usadas para calibrar \textit{scanners}.
 
 Cada foto aprovada é convertida para tons de cinza pela fórmula da ITU-R
-BT.601, $Y = 0{,}299R + 0{,}587G + 0{,}114B$, e recortada em blocos de
-512x512 tomados de uma grade centrada, sem sobreposição, de modo que dois
-recortes da mesma foto nunca compartilhem pixels.
+BT.601, $Y = 0{,}299R + 0{,}587G + 0{,}114B$, e recortada em blocos de 512x512
+tomados de uma grade centrada, sem sobreposição, de modo que dois recortes da
+mesma foto nunca compartilhem pixels.
 
-\section{O banco de filtros}
-
-\subsection{Os sete filtros}
+\section{O banco de filtros e as três escalas}
 
 Um filtro de Gabor é uma onda cosseno (ou seno) multiplicada por uma
-envoltória gaussiana. Ele responde forte onde a imagem tem variação periódica
-com a orientação e o comprimento de onda para os quais foi sintonizado. Os
-parâmetros usados são $\lambda = 5$ px de comprimento de onda, $\sigma = 2{,}2$
-px de envoltória, razão de aspecto $\gamma = 0{,}5$ e núcleo de 15x15 px.
-
-O banco tem sete filtros:
-
-\begin{itemize}
-\item \textbf{quatro Gabor de fase par} (cosseno), nas orientações 0, 45, 90 e
-  135 graus. A fase par tem um lobo central: é um detector de \textit{linha}.
-  São eles que cobrem as quatro orientações pedidas no enunciado;
-\item \textbf{dois Gabor de fase ímpar} (seno), em 0 e 90 graus. A fase ímpar é
-  antissimétrica: é um detector de \textit{borda}, de degrau de intensidade. A
-  distinção importa porque uma parede de tijolos e um ripado de madeira podem
-  ter a mesma orientação dominante e ainda assim serem coisas diferentes ---
-  um tem degraus, o outro tem linhas;
-\item \textbf{um filtro circular}, o Laplaciano da gaussiana ($\sigma = 2{,}0$).
-  É isotrópico: sua resposta em frequência é um anel, não um par de lobos.
-  Responde a granulação e manchas sem direção preferida, e é ele que
-  caracteriza asfalto e brita.
-\end{itemize}
-
-Todos os sete têm média zero, isto é, DC nulo, o que garante que nenhum
-responda a brilho constante: uma parede clara e a mesma parede na sombra dão a
-mesma resposta, a menos do contraste.
-
-A convenção de orientação adotada é a da estrutura detectada: um filtro a 0
-graus responde a listras horizontais. Como a onda precisa variar na direção
-perpendicular às listras, o código usa $\theta = \alpha + 90^\circ$ na fórmula
-da gaussiana modulada.
+envoltória gaussiana, e responde forte onde a imagem tem variação periódica na
+orientação e no comprimento de onda para os quais foi sintonizado. Usou-se
+$\lambda = 5$ px, $\sigma = 2{,}2$ px, razão de aspecto $\gamma = 0{,}5$ e
+núcleo de 15x15 px. O banco tem sete filtros: quatro Gabor de \textbf{fase
+par} (cosseno) a 0, 45, 90 e 135 graus, que têm lobo central e portanto
+detectam \textit{linha}, cobrindo as quatro orientações pedidas no enunciado;
+dois Gabor de \textbf{fase ímpar} (seno) a 0 e 90 graus, antissimétricos, que
+detectam \textit{borda} --- a distinção importa porque uma parede de tijolos e
+um ripado de madeira podem ter a mesma orientação dominante e ainda assim
+serem coisas diferentes; e um \textbf{filtro circular}, o Laplaciano da
+gaussiana, isotrópico, que responde a granulação sem direção preferida e é
+quem caracteriza asfalto e brita. Todos têm média zero, então nenhum responde
+a brilho constante.
 
 \begin{figure}[htb]
 \centering
@@ -141,62 +104,33 @@ da gaussiana modulada.
 \label{fig:banco}
 \end{figure}
 
-\subsection{As três escalas}
-
-O enunciado oferece dois caminhos para o multiescala: construir os filtros em
-três tamanhos, ou construí-los uma vez só e encolher a imagem. Adotou-se o
-segundo, mais barato --- convoluir com um núcleo 15x15 numa imagem que encolhe
-custa bem menos que convoluir com núcleos 15x15, 29x29 e 57x57 na imagem
-cheia.
-
-A pirâmide é a gaussiana clássica: suaviza com uma gaussiana ($\sigma = 1{,}0$)
-e amostra um pixel a cada dois em cada dimensão, dando níveis de 512x512,
-256x256 e 128x128. Como o filtro não muda de tamanho, no nível 2 ele enxerga
-uma vizinhança quatro vezes maior da imagem original, o que dá a sensibilidade
-a texturas grossas.
-
-Sete filtros em três escalas produzem 21 mapas de resposta por imagem. De cada
-mapa toma-se o valor absoluto: uma barra clara sobre fundo escuro e uma barra
-escura sobre fundo claro são a mesma textura, e sem retificar a média da
-janela daria aproximadamente zero para as duas. Os mapas dos níveis menores
-são reamostrados de volta para 512x512, para que todos fiquem na mesma grade.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{figuras/fig2_respostas.png}
-\caption{Módulo da resposta dos sete filtros nas três escalas, para um recorte
-  de parede de tijolos. As juntas horizontais de argamassa acendem no filtro
-  ``par 0'' e quase somem no ``par 90''; o filtro circular responde à
-  granulação da própria superfície do tijolo.}
-\label{fig:respostas}
-\end{figure}
+Para o multiescala, o enunciado permite construir os filtros em três tamanhos
+ou construí-los uma vez e encolher a imagem. Adotou-se o segundo, mais barato.
+A pirâmide gaussiana suaviza com $\sigma = 1{,}0$ e amostra um pixel a cada
+dois, dando níveis de 512x512, 256x256 e 128x128; como o filtro continua
+15x15, no nível 2 ele enxerga uma vizinhança quatro vezes maior da imagem
+original. Sete filtros em três escalas produzem 21 mapas de resposta. De cada
+mapa toma-se o valor absoluto, porque uma barra clara sobre fundo escuro e uma
+barra escura sobre fundo claro são a mesma textura, e sem retificar a média da
+janela daria aproximadamente zero para as duas.
 
 \section{O descritor de 24 dimensões}
 
-O descritor de uma região é, como pede o enunciado, a média de cada mapa de
-resposta dentro da janela, o que dá 21 números. A conversão desses 21 números
-nas 24 dimensões finais é a única decisão de projeto não óbvia deste trabalho.
-
-O problema das médias cruas é que elas carregam o contraste da foto. A mesma
-parede fotografada ao sol e na sombra produz vetores de comprimentos bem
-diferentes, apontando praticamente na mesma direção. Uma distância euclidiana
-calculada sobre esses vetores mede sobretudo \textit{quanto contraste a foto
-tem}, e não \textit{que textura ela é}. Na prática isso aparecia como grupos
-formados por fotos claras e fotos escuras, misturando materiais.
+O descritor de uma região é a média de cada mapa de resposta dentro da janela,
+o que dá 21 números. Usá-los crus não funciona bem: eles carregam o contraste
+da foto, e a distância euclidiana passa a medir \textit{quanto contraste a
+imagem tem} em vez de \textit{que textura ela é} --- a mesma parede ao sol e na
+sombra vira dois grupos.
 
 A correção é separar as duas coisas. Cada escala passa a ser descrita por oito
 números: as sete frações $r_i / (r_1 + \cdots + r_7)$, que dizem como a energia
 se reparte entre as orientações e o filtro circular --- a \textit{forma} da
-assinatura, invariante a contraste --- e o valor
-$\log(1 + r_1 + \cdots + r_7)$, a energia total daquela escala, isto é, o
-\textit{tamanho}. O logaritmo comprime a cauda longa, para que uma única junta
-de argamassa muito contrastada não domine o vetor. Três escalas por oito
-números dão as 24 dimensões.
+assinatura, invariante a contraste --- e o valor $\log(1 + r_1 + \cdots + r_7)$,
+a energia total daquela escala, isto é, o \textit{tamanho}. Três escalas por
+oito números dão as 24 dimensões. A Tabela~\ref{tab:descritor} mostra o ganho
+medido, mudando apenas a forma do descritor.
 
-A Tabela~\ref{tab:descritor} mostra o ganho medido, com o mesmo
-\textit{pipeline} e mudando apenas a forma do descritor.
-
-\begin{table}[ht]
+\begin{table}[htb]
 \centering
 \caption{Efeito da forma do descritor sobre a pureza do agrupamento.}
 \label{tab:descritor}
@@ -204,79 +138,51 @@ A Tabela~\ref{tab:descritor} mostra o ganho medido, com o mesmo
 \hline
 \textbf{Descritor} & \textbf{Dimensões} & \textbf{Pureza (k=8)} \\
 \hline
-médias cruas dos filtros e passa-baixa & 24 & 0,40 \\
-médias cruas, sem a passa-baixa        & 21 & 0,45 \\
-logaritmo das médias cruas             & 24 & 0,50 \\
+médias cruas dos filtros e passa-baixa  & 24 & 0,40 \\
+médias cruas, sem a passa-baixa         & 21 & 0,45 \\
+logaritmo das médias cruas              & 24 & 0,50 \\
 perfil normalizado e energia por escala & 24 & \textbf{0,58} \\
 \hline
 \end{tabular}
 \end{table}
 
-Duas granularidades são calculadas com a mesma função. No \textbf{descritor
-global}, a janela é a imagem inteira, e sai um vetor de 24 dimensões por
-imagem, usado para agrupar o conjunto. No \textbf{descritor local}, janelas de
-64x64 px andam de 32 em 32 px, com 50\% de sobreposição, o que dá uma grade de
-15x15 janelas por imagem, 9.000 no conjunto todo. A janela é maior que o passo
-de propósito: com janelas justas de 32x32 o mapa de rótulos fica pipocado,
-porque uma janela desse tamanho às vezes cai inteira dentro de uma junta de
-argamassa e não vê textura nenhuma, só o vão.
+O mesmo cálculo serve em duas granularidades. Com a imagem inteira como
+janela, sai um vetor por imagem, usado para agrupar o conjunto. Com janelas de
+64x64 px andando de 32 em 32 px, saem 225 vetores por imagem, usados para
+segmentar por dentro; a janela é maior que o passo de propósito, porque com
+janelas justas de 32x32 o mapa de rótulos fica pipocado.
 
-\section{Agrupamento}
+\section{Agrupamento e resultados}
 
-O agrupamento é um k-médias euclidiano implementado à mão. Três detalhes
-importam. O primeiro é a \textbf{normalização z-score por dimensão},
-obrigatória aqui: as frações vivem entre 0 e 1 e a energia logarítmica vale
-alguns inteiros, de modo que sem normalizar a distância euclidiana seria
-dominada pelas dimensões de energia e as de orientação seriam ignoradas. O
-segundo é a \textbf{inicialização k-means++} \cite{arthur:07}, que sorteia
-centroides iniciais afastados entre si; com semente fixa, a execução é
-determinística. O terceiro são as \textbf{dez reinicializações}, ficando com a
-de menor inércia, já que o k-médias converge para mínimos locais.
+O agrupamento é um k-médias euclidiano implementado à mão, com inicialização
+k-means++ \cite{arthur:07}, semente fixa e dez reinicializações, ficando com a
+de menor inércia. Antes, cada dimensão passa por z-score: as frações vivem
+entre 0 e 1 e a energia logarítmica vale alguns inteiros, então sem normalizar
+a distância seria dominada pelas dimensões de energia.
 
-Para avaliar, usam-se três medidas: a inércia (soma das distâncias ao quadrado
-ao centroide), a silhueta média e a pureza em relação ao material fotografado
---- a fração de imagens que está no rótulo majoritário do seu grupo. A pureza é
-a única que usa a resposta certa, e é preciso lembrar que ela pune o método
-quando ele está certo mas discorda da etiqueta: um concreto muito granulado
-realmente se parece mais com brita do que com um concreto liso.
+Nem a inércia nem a silhueta indicam um k natural --- as texturas urbanas
+formam um contínuo, não oito nuvens separadas. Adotou-se k = 8, o número de
+materiais fotografados, que dá pureza 0,575 e silhueta 0,220. A pureza é a
+fração de imagens que está no rótulo majoritário do seu grupo, e é preciso
+lembrar que ela pune o método quando ele está certo mas discorda da etiqueta:
+um concreto muito granulado realmente se parece mais com brita do que com um
+concreto liso.
 
-\section{Resultados}
-
-\subsection{Escolha de k}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.95\textwidth]{figuras/fig3_cotovelo.png}
-\caption{Inércia (esquerda), silhueta e pureza (direita) em função de k, para
-  o agrupamento das 40 imagens.}
-\label{fig:cotovelo}
-\end{figure}
-
-A curva de inércia não tem um cotovelo marcado, o que já diz algo sobre o
-conjunto: as texturas urbanas formam um contínuo, não oito nuvens bem
-separadas. A silhueta fica entre 0,21 e 0,28 para todo k de 2 a 14, sem pico
-claro. A pureza cresce de forma quase monótona, como esperado --- com k = 40
-ela seria 1,0 e não significaria nada. Adotou-se k = 8, o número de materiais
-fotografados, que dá pureza 0,575 e silhueta 0,220, e que permite comparar
-diretamente os grupos encontrados com as classes reais.
-
-\subsection{Agrupamento das 40 imagens}
-
-\begin{table}[ht]
+\begin{table}[htb]
 \centering
 \caption{Composição dos oito grupos encontrados.}
 \label{tab:grupos}
-\begin{tabular}{clp{7.5cm}}
+\begin{tabular}{clp{7.2cm}}
 \hline
 \textbf{Grupo} & \textbf{n} & \textbf{O que reuniu} \\
 \hline
-G0 & 7 & superfícies granuladas de contraste médio: asfalto, pedra desgastada \\
+G0 & 7 & superfícies granuladas de contraste médio \\
 G1 & 1 & tapume claro de ripas verticais \\
-G2 & 3 & veio de madeira horizontal, listras finas e alongadas \\
+G2 & 3 & veio de madeira horizontal \\
 G3 & 2 & telhas em fiadas diagonais \\
 G4 & 9 & alvenaria: blocos com juntas horizontais fortes \\
-G5 & 5 & superfícies lisas de granulação fina: asfalto novo, concreto liso \\
-G6 & 9 & granulado grosso e sem direção: brita, concreto granulado, pedra \\
+G5 & 5 & superfícies lisas de granulação fina \\
+G6 & 9 & granulado grosso e sem direção \\
 G7 & 4 & placas grandes e lisas separadas por juntas largas \\
 \hline
 \end{tabular}
@@ -284,18 +190,14 @@ G7 & 4 & placas grandes e lisas separadas por juntas largas \\
 
 A pureza de 0,575 esconde um comportamento que a Figura~\ref{fig:grupos} torna
 evidente: os grupos são coerentes como textura, ainda quando não coincidem com
-o material. G6 junta as cinco britas com dois concretos granulados e dois
-paralelepípedos rugosos --- todos são granulação grossa isotrópica, e o filtro
-circular os vê como a mesma coisa. G4 junta tijolo, calçada em blocos e telha
-em fiadas: todos são retângulos separados por juntas horizontais. G5 junta
-asfalto novo com concreto liso, que de fato são indistinguíveis em cinza
-naquela escala.
-
-Os erros que restam são de dois tipos. O primeiro é a classe que se parte: as
-cinco telhas ficaram espalhadas por três grupos, porque telha vista de frente,
-em diagonal e em fiada empilhada são três texturas diferentes que por acaso
-têm o mesmo nome. O segundo são os grupos de um elemento só, que aparecem
-quando uma imagem é atípica demais para se juntar a qualquer outra.
+o material. G6 junta as cinco britas com concretos granulados e paralelepípedos
+rugosos --- todos são granulação grossa isotrópica, e o filtro circular os vê
+como a mesma coisa. G4 junta tijolo, calçada em blocos e telha em fiadas, que
+são todos retângulos separados por juntas horizontais. Os erros que restam são
+de dois tipos: a classe que se parte, como as telhas, espalhadas por três
+grupos porque telha de frente, em diagonal e empilhada são texturas diferentes
+com o mesmo nome; e os grupos de um elemento só, de imagens atípicas demais
+para se juntar a qualquer outra.
 
 \begin{figure}[p]
 \centering
@@ -305,118 +207,49 @@ quando uma imagem é atípica demais para se juntar a qualquer outra.
 \label{fig:grupos}
 \end{figure}
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.8\textwidth]{figuras/fig6_matriz.png}
-\caption{Matriz de confusão entre a classe da foto e o grupo encontrado.}
-\label{fig:matriz}
-\end{figure}
-
-\subsection{Segmentação dentro das imagens}
-
 Rodando o mesmo k-médias sobre as 9.000 janelas de 64x64 de todas as imagens,
-com k = 6, cada janela recebe o rótulo do grupo mais próximo. Pintando cada
-janela com a cor do seu grupo obtém-se um mapa de segmentação por textura.
+com k = 6, cada janela recebe o rótulo do grupo mais próximo, o que produz um
+mapa de segmentação por textura (Figura~\ref{fig:segmentacao}). Este é o
+resultado mais fácil de auditar a olho: as regiões que o método separa --- as
+frestas entre ripas de madeira, o rejunte entre as pedras, a junta entre
+placas de concreto --- são as que uma pessoa apontaria. O mapa é grosseiro por
+construção, com limites em degraus de 32 px.
 
 \begin{figure}[htb]
 \centering
-\includegraphics[width=\textwidth]{figuras/fig7_segmentacao.png}
+\includegraphics[width=0.95\textwidth]{figuras/fig7_segmentacao.png}
 \caption{Segmentação por textura: acima as imagens originais, abaixo o mapa de
   grupos sobreposto. Uma imagem de textura uniforme fica quase toda de uma cor
   só; onde há mais de um material, o limite aparece.}
 \label{fig:segmentacao}
 \end{figure}
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.85\textwidth]{figuras/fig7b_detalhe.png}
-\caption{Detalhe em quatro imagens. As frestas entre as ripas de madeira, o
-  rejunte entre as pedras e a junta entre as placas de concreto saem separados
-  das superfícies vizinhas.}
-\label{fig:detalhe}
-\end{figure}
+Para verificar quanto o resultado depende do banco escolhido, todo o
+\textit{pipeline} foi repetido com derivadas de gaussiana
+\cite{freeman:91} --- 2ª derivada no lugar do Gabor par, 1ª derivada no lugar
+do ímpar, mesmo filtro circular --- mantendo idênticos o conjunto, a pirâmide,
+o descritor e o agrupamento. A troca quase não muda nada: mesma pureza, índice
+de Rand \cite{rand:71} de 0,98 entre os dois agrupamentos e uma única imagem
+das 40 trocando de grupo. O descritor descarta a diferença, porque a média do módulo numa janela
+de 64x64, depois normalizada pela energia, dá quase o mesmo número vindo de
+filtros diferentes.
 
-Este é o resultado mais fácil de auditar a olho: as regiões que o método separa
-são exatamente as que uma pessoa apontaria. O mapa é grosseiro por construção
---- a menor unidade é uma janela de 64x64, então os limites saem em degraus de
-32 px.
+\section{Limitações e conclusão}
 
-\subsection{Trocando o banco de filtros}
+O método não tem invariância a rotação --- girar a foto 45 graus muda o
+descritor por completo, consequência de usar orientações fixas --- nem a
+escala de aquisição, já que as três escalas cobrem uma faixa de apenas 4x. O k
+foi escolhido à mão, por corresponder ao número de materiais, que é informação
+externa ao método. E o conjunto é pequeno: 40 imagens vindas de 36 fotos.
 
-Para verificar quanto do resultado depende do banco escolhido, todo o
-\textit{pipeline} foi repetido com um banco de derivadas de gaussiana
-\cite{freeman:91}, mantendo idênticos o conjunto, a pirâmide, o descritor e o
-agrupamento. O paralelo é filtro a filtro: a 2ª derivada da gaussiana ocupa o
-lugar do Gabor de fase par (detector de linha), a 1ª derivada ocupa o lugar do
-Gabor de fase ímpar (detector de borda), e o filtro circular é o mesmo.
-
-O resultado é que a troca quase não muda nada. Os dois bancos dão a mesma
-pureza, e os agrupamentos são praticamente o mesmo objeto: o índice de Rand
-\cite{rand:71} entre eles é 0,98, e uma única imagem das 40 troca de grupo ---
-um trecho de placa de concreto com pouca textura e uma junta atravessando, que
-é um caso de fronteira.
-
-A diferença entre os filtros existe e é mensurável. Em largura absoluta as duas
-bandas são quase iguais, 0,16 ciclos por pixel a meia altura, mas o Gabor tem o
-pico em 0,20 ciclos/px e a derivada em 0,14, o que torna a derivada
-proporcionalmente mais larga: 1,8 oitavas contra 1,2. O Gabor é mais seletivo,
-porém por uma margem modesta nesta configuração.
-
-Três razões explicam por que isso não chega ao resultado. A primeira é que o
-descritor descarta boa parte da diferença: o que entra no vetor é a média do
-módulo da resposta numa janela de 64x64, depois normalizada pela energia total
-da escala, e duas medidas de ``quanta energia horizontal existe nesta janela''
-tendem a concordar mesmo vindo de filtros diferentes. A segunda é que a
-pirâmide cobre a mesma faixa de tamanhos nos dois casos. A terceira é que
-metade do conjunto --- asfalto, brita, concreto --- não tem frequência
-definida nenhuma para a seletividade do Gabor premiar.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{figuras/comparacao.png}
-\caption{Os dois bancos lado a lado. Em cima os Gabor, no meio as derivadas de
-  gaussiana, embaixo o corte do espectro do filtro de linha a 0 graus de cada
-  banco, com o pico e a largura a meia altura marcados.}
-\label{fig:comparacao}
-\end{figure}
-
-\section{Limitações}
-
-\begin{itemize}
-\item \textbf{Sem invariância a rotação.} Girar a foto 45 graus muda o
-  descritor por completo, consequência direta de usar orientações fixas. A
-  correção usual é tomar o máximo das respostas sobre as orientações, como no
-  banco MR8 \cite{varma:05}, ao custo de perder justamente a informação de
-  direção que separa madeira de tijolo aqui.
-\item \textbf{Sem invariância a escala de aquisição.} As três escalas cobrem
-  uma faixa de 4x em tamanho de elemento; uma parede fotografada de perto e de
-  longe pode cair em grupos diferentes.
-\item \textbf{k escolhido à mão.} Nem a inércia nem a silhueta indicam um k
-  natural; adotou-se k = 8 por corresponder ao número de materiais, que é
-  informação externa ao método.
-\item \textbf{Conjunto pequeno.} São 40 imagens vindas de 36 fotos, e algumas
-  classes tiveram poucas fotos boas disponíveis, o que obrigou a tirar dois
-  recortes da mesma foto.
-\end{itemize}
-
-\section{Conclusão}
-
-Um banco de sete filtros orientados, aplicado em três escalas e resumido pela
-média das respostas em cada janela, é suficiente para agrupar texturas urbanas
-de maneira visualmente coerente e para segmentar o interior das imagens sem
-nenhum aprendizado. A pureza de 0,58 contra o material fotografado subestima o
-método: a inspeção das figuras mostra que os grupos separam \textit{aparências
-de textura}, e materiais diferentes com a mesma aparência caem juntos, o que é
-o comportamento correto para um descritor que só enxerga variação de
-intensidade.
-
-O passo que mais afetou o resultado não foi a escolha dos filtros, e sim a
-forma do descritor: separar a repartição da energia entre os filtros da
-quantidade total de energia levou a pureza de 0,40 para 0,58. Trocar o banco
-inteiro de Gabor por derivadas de gaussiana, em contraste, deixou o resultado
+Ainda assim, um banco de sete filtros orientados aplicado em três escalas e
+resumido pela média das respostas em cada janela é suficiente para agrupar
+texturas urbanas de maneira visualmente coerente e para segmentar o interior
+das imagens sem nenhum aprendizado. O passo que mais afetou o resultado não
+foi a escolha dos filtros, e sim a forma do descritor: separar a repartição da
+energia entre os filtros da quantidade total de energia levou a pureza de 0,40
+para 0,58. Trocar o banco inteiro, em contraste, deixou o resultado
 essencialmente intacto.
-
-\clearpage
 
 \bibliographystyle{sbc}
 \bibliography{artigo}

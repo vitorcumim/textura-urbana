@@ -11,15 +11,21 @@ Relatório para entrega, no template da SBC (5 páginas):
 Há também uma versão em markdown que gera PDF sem LaTeX,
 [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf).
 
-Há **três versões do mesmo trabalho**, e as três rodam:
+Há **quatro versões do mesmo trabalho**, e as quatro rodam:
 
-| | Completa | Simplificada | Gaussianos |
-|---|---|---|---|
-| código | 7 módulos em `src/` | um arquivo, [`simples/textura_simples.py`](simples/textura_simples.py) | [`gaussianos/`](gaussianos/textura_gaussianos.py), troca só o banco |
-| filtros | Gabor + LoG | Gabor + LoG | derivadas de gaussiana + LoG |
-| relatório | [11 páginas](relatorio/relatorio.pdf) | [6 páginas](simples/relatorio_simples.pdf) | [4 páginas](gaussianos/relatorio_gaussianos.pdf) |
-| faz | baixa e prepara as fotos, escolhe k por silhueta, PCA, 10 figuras | só o caminho principal: filtra, agrupa, 2 figuras | o mesmo, com o outro banco, mais a comparação |
-| pureza (k=8) | 0,58 | 0,53 | 0,53 |
+| | Completa | Simplificada | Gaussianos | 24 filtros |
+|---|---|---|---|---|
+| código | 7 módulos em `src/` | um arquivo, [`simples/`](simples/textura_simples.py) | [`gaussianos/`](gaussianos/textura_gaussianos.py) | um arquivo, [`filtros24/`](filtros24/textura24.py) |
+| filtros | 7 Gabor + LoG, pirâmide de 3 níveis | idem | derivadas de gaussiana, pirâmide | **24 núcleos reais**, 8 por escala (11², 21², 41²) |
+| imagens | 40 | 40 | 40 | **32** (4 por material) |
+| vetor | 3 × (7 frações + energia) | idem | idem | uma média por filtro, direto |
+| relatório | [11 páginas](relatorio/relatorio.pdf) | [6 páginas](simples/relatorio_simples.pdf) | [4 páginas](gaussianos/relatorio_gaussianos.pdf) | [3 páginas](filtros24/relatorio_filtros24.pdf) |
+| pureza (k=8) | 0,58 | 0,53 | 0,53 | 0,53 |
+
+A versão de **24 filtros** é a leitura mais literal do enunciado: em vez de
+encolher a imagem numa pirâmide, constrói os núcleos em três tamanhos, de modo
+que existem 24 filtros de verdade e a média de cada um é uma das 24 dimensões,
+sem nenhuma conta no meio além de um logaritmo. Usa 32 imagens, o mínimo pedido.
 
 Duas comparações saíram desse arranjo:
 
@@ -41,12 +47,13 @@ python src/main.py
 Leva cerca de dez segundos e regenera tudo que está em `saida/`. As 40 imagens
 já preparadas estão versionadas em `imagens/`, então não é preciso baixar nada.
 
-As outras duas versões são um comando cada:
+As outras três versões são um comando cada:
 
 ```
 python simples/textura_simples.py
 python gaussianos/textura_gaussianos.py
 python gaussianos/comparar.py
+python filtros24/textura24.py
 ```
 
 Para refazer desde as fotos originais:
@@ -73,6 +80,7 @@ python src/main.py
 | `relatorio/gerar_pdf.py` | markdown → PDF (aceita outro arquivo como argumento) |
 | `simples/` | a versão simplificada: um script e um relatório curto |
 | `gaussianos/` | o mesmo pipeline com derivadas de gaussiana, e a comparação entre os bancos |
+| `filtros24/` | 24 núcleos em 3 tamanhos aplicados a 32 imagens, um script só |
 
 ## Usar fotos próprias
 

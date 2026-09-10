@@ -276,7 +276,7 @@ def main():
 
     figura_grupos(nomes, rotulos, K_IMAGENS)
     figura_segmentacao(nomes, rotulos_janela, grade, K_JANELAS)
-    print("\nfiguras em simples/saida/")
+    print("\nfiguras em %s/" % os.path.relpath(SAIDA, RAIZ).replace("\\", "/"))
 
 
 if __name__ == "__main__":

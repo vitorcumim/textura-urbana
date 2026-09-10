@@ -9,19 +9,25 @@ regiões semelhantes, tanto entre imagens quanto dentro de cada imagem.
 Relatório: [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf)
 (fonte em [`relatorio/relatorio.md`](relatorio/relatorio.md)).
 
-Há **duas versões do mesmo trabalho**, e as duas rodam:
+Há **três versões do mesmo trabalho**, e as três rodam:
 
-| | Versão completa | Versão simplificada |
-|---|---|---|
-| código | 7 módulos em `src/` | um arquivo, [`simples/textura_simples.py`](simples/textura_simples.py) |
-| relatório | [11 páginas, 10 figuras](relatorio/relatorio.pdf) | [6 páginas, 4 figuras](simples/relatorio_simples.pdf) |
-| faz | baixa e prepara as fotos, escolhe k por silhueta, PCA, 10 figuras | só o caminho principal: filtra, agrupa, desenha 2 figuras |
-| pureza (k=8) | 0,58 | 0,53 |
+| | Completa | Simplificada | Gaussianos |
+|---|---|---|---|
+| código | 7 módulos em `src/` | um arquivo, [`simples/textura_simples.py`](simples/textura_simples.py) | [`gaussianos/`](gaussianos/textura_gaussianos.py), troca só o banco |
+| filtros | Gabor + LoG | Gabor + LoG | derivadas de gaussiana + LoG |
+| relatório | [11 páginas](relatorio/relatorio.pdf) | [6 páginas](simples/relatorio_simples.pdf) | [4 páginas](gaussianos/relatorio_gaussianos.pdf) |
+| faz | baixa e prepara as fotos, escolhe k por silhueta, PCA, 10 figuras | só o caminho principal: filtra, agrupa, 2 figuras | o mesmo, com o outro banco, mais a comparação |
+| pureza (k=8) | 0,58 | 0,53 | 0,53 |
 
-A diferença de pureza vem só da inicialização do k-médias: a versão completa
-usa k-means++ e a simples sorteia os centroides. Curiosamente a simples acha
-uma inércia *menor* (210,5 contra 218,2) — o que o k-médias otimiza não é o
-que concorda com as etiquetas dos materiais.
+Duas comparações saíram desse arranjo:
+
+- **completa contra simplificada** — a diferença de pureza vem só da
+  inicialização do k-médias (k-means++ contra sorteio). A simples acha uma
+  inércia *menor* (210,5 contra 218,2) e ainda assim concorda menos com as
+  etiquetas: o que o k-médias otimiza não é o que a pureza mede;
+- **Gabor contra gaussianas** — trocar o banco inteiro quase não muda nada.
+  Mesma pureza, índice de Rand 0,98, uma única imagem das 40 troca de grupo.
+  `python gaussianos/comparar.py` mede isso e desenha os dois bancos lado a lado.
 
 ## Rodar
 
@@ -33,10 +39,12 @@ python src/main.py
 Leva cerca de dez segundos e regenera tudo que está em `saida/`. As 40 imagens
 já preparadas estão versionadas em `imagens/`, então não é preciso baixar nada.
 
-A versão simplificada é um comando só e escreve em `simples/saida/`:
+As outras duas versões são um comando cada:
 
 ```
 python simples/textura_simples.py
+python gaussianos/textura_gaussianos.py
+python gaussianos/comparar.py
 ```
 
 Para refazer desde as fotos originais:
@@ -61,6 +69,7 @@ python src/main.py
 | `src/visualizar.py` | todas as figuras do relatório |
 | `relatorio/gerar_pdf.py` | markdown → PDF (aceita outro arquivo como argumento) |
 | `simples/` | a versão simplificada: um script e um relatório curto |
+| `gaussianos/` | o mesmo pipeline com derivadas de gaussiana, e a comparação entre os bancos |
 
 ## Usar fotos próprias
 

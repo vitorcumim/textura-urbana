@@ -6,8 +6,10 @@ aplicado em três escalas de uma pirâmide gaussiana, gerando um descritor de
 **24 dimensões** por região. Um k-médias euclidiano escrito à mão agrupa as
 regiões semelhantes, tanto entre imagens quanto dentro de cada imagem.
 
-Relatório: [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf)
-(fonte em [`relatorio/relatorio.md`](relatorio/relatorio.md)).
+Relatório para entrega, no template da SBC:
+[`latex/artigo.pdf`](latex/artigo.pdf) (fonte em [`latex/`](latex/README.md)).
+Há também uma versão em markdown que gera PDF sem LaTeX,
+[`relatorio/relatorio.pdf`](relatorio/relatorio.pdf).
 
 Há **três versões do mesmo trabalho**, e as três rodam:
 
@@ -67,6 +69,7 @@ python src/main.py
 | `src/extrair.py` | médias por janela e a montagem do vetor de 24 dimensões |
 | `src/agrupar.py` | k-médias, k-means++, silhueta, pureza, PCA |
 | `src/visualizar.py` | todas as figuras do relatório |
+| `latex/` | o artigo no template da SBC, com o PDF compilado |
 | `relatorio/gerar_pdf.py` | markdown → PDF (aceita outro arquivo como argumento) |
 | `simples/` | a versão simplificada: um script e um relatório curto |
 | `gaussianos/` | o mesmo pipeline com derivadas de gaussiana, e a comparação entre os bancos |

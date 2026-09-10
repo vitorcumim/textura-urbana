@@ -44,3 +44,12 @@ fotos_originais/*/*
 !fotos_originais/tijolo/tijolo_03.jpg
 !fotos_originais/tijolo/tijolo_07.jpg
 !fotos_originais/tijolo/tijolo_08.jpg
+
+# intermediarios do LaTeX (o artigo.pdf continua versionado)
+latex/*.aux
+latex/*.log
+latex/*.bbl
+latex/*.blg
+latex/*.out
+latex/*.dvi
+latex/*.toc

@@ -9,6 +9,20 @@ regiões semelhantes, tanto entre imagens quanto dentro de cada imagem.
 Relatório: [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf)
 (fonte em [`relatorio/relatorio.md`](relatorio/relatorio.md)).
 
+Há **duas versões do mesmo trabalho**, e as duas rodam:
+
+| | Versão completa | Versão simplificada |
+|---|---|---|
+| código | 7 módulos em `src/` | um arquivo, [`simples/textura_simples.py`](simples/textura_simples.py) |
+| relatório | [11 páginas, 10 figuras](relatorio/relatorio.pdf) | [6 páginas, 4 figuras](simples/relatorio_simples.pdf) |
+| faz | baixa e prepara as fotos, escolhe k por silhueta, PCA, 10 figuras | só o caminho principal: filtra, agrupa, desenha 2 figuras |
+| pureza (k=8) | 0,58 | 0,53 |
+
+A diferença de pureza vem só da inicialização do k-médias: a versão completa
+usa k-means++ e a simples sorteia os centroides. Curiosamente a simples acha
+uma inércia *menor* (210,5 contra 218,2) — o que o k-médias otimiza não é o
+que concorda com as etiquetas dos materiais.
+
 ## Rodar
 
 ```
@@ -18,6 +32,12 @@ python src/main.py
 
 Leva cerca de dez segundos e regenera tudo que está em `saida/`. As 40 imagens
 já preparadas estão versionadas em `imagens/`, então não é preciso baixar nada.
+
+A versão simplificada é um comando só e escreve em `simples/saida/`:
+
+```
+python simples/textura_simples.py
+```
 
 Para refazer desde as fotos originais:
 
@@ -39,7 +59,8 @@ python src/main.py
 | `src/extrair.py` | médias por janela e a montagem do vetor de 24 dimensões |
 | `src/agrupar.py` | k-médias, k-means++, silhueta, pureza, PCA |
 | `src/visualizar.py` | todas as figuras do relatório |
-| `relatorio/gerar_pdf.py` | markdown → PDF |
+| `relatorio/gerar_pdf.py` | markdown → PDF (aceita outro arquivo como argumento) |
+| `simples/` | a versão simplificada: um script e um relatório curto |
 
 ## Usar fotos próprias
 

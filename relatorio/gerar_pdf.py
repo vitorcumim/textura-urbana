@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Gera relatorio/relatorio.pdf a partir de relatorio/relatorio.md.
+Gera um PDF a partir de um markdown restrito.
 
-    python relatorio/gerar_pdf.py
+    python relatorio/gerar_pdf.py                     # relatorio/relatorio.md
+    python relatorio/gerar_pdf.py outro/arquivo.md    # qualquer outro
 
 O relatorio.md e a unica fonte do texto. Este script entende um subconjunto
 pequeno de markdown -- o suficiente para o artigo e nada alem disso:
@@ -30,9 +31,9 @@ from reportlab.platypus import (Image, ListFlowable, ListItem, PageBreak, Paragr
 from reportlab.lib.utils import ImageReader
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-FONTE = os.path.join(AQUI, "relatorio.md")
-DESTINO = os.path.join(AQUI, "relatorio.pdf")
 LARGURA_UTIL = A4[0] - 4 * cm
+
+BASE = AQUI          # pasta usada para resolver os caminhos das figuras
 
 _ss = getSampleStyleSheet()
 E = {
@@ -184,7 +185,7 @@ def converter(texto):
             fecha_tudo()
             m = re.match(r"!\[(.*)\]\((.+)\)", s)
             n_fig += 1
-            fluxo.extend(figura(os.path.normpath(os.path.join(AQUI, m.group(2))),
+            fluxo.extend(figura(os.path.normpath(os.path.join(BASE, m.group(2))),
                                 m.group(1), n_fig))
         elif s.startswith("|"):
             fecha_par()
@@ -216,14 +217,18 @@ def rodape(canvas, doc):
 
 
 def main():
-    with open(FONTE, encoding="utf-8") as f:
+    global BASE
+    fonte = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1         else os.path.join(AQUI, "relatorio.md")
+    BASE = os.path.dirname(fonte)          # figuras sao relativas ao proprio .md
+    destino = os.path.splitext(fonte)[0] + ".pdf"
+    with open(fonte, encoding="utf-8") as f:
         fluxo, meta = converter(f.read())
-    doc = SimpleDocTemplate(DESTINO, pagesize=A4,
+    doc = SimpleDocTemplate(destino, pagesize=A4,
                             leftMargin=2 * cm, rightMargin=2 * cm,
                             topMargin=2 * cm, bottomMargin=2 * cm,
                             title=meta.get("titulo"), author=meta.get("autores"))
     doc.build(fluxo, onFirstPage=rodape, onLaterPages=rodape)
-    print("-> %s (%d KB)" % (DESTINO, os.path.getsize(DESTINO) // 1024))
+    print("-> %s (%d KB)" % (destino, os.path.getsize(destino) // 1024))
 
 
 if __name__ == "__main__":

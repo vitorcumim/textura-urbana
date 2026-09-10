@@ -4,15 +4,20 @@ O mesmo trabalho no formato de artigo da Sociedade Brasileira de Computação:
 A4, coluna única, Times 12 pt, `abstract` e `resumo` na primeira página,
 bibliografia pelo estilo `sbc`.
 
-Saída pronta: [`artigo.pdf`](artigo.pdf) — 6 páginas, 3 figuras, 2 tabelas.
+Saída pronta: [`artigo.pdf`](artigo.pdf) — 8 páginas, 7 figuras, 2 tabelas e
+3 referências.
 
-Uma versão anterior tinha 11 páginas e 8 figuras. Foi encurtada de propósito:
-saíram as figuras dos mapas de resposta, da curva do cotovelo, da matriz de
-confusão, do detalhe da segmentação e da comparação entre bancos, além das
-subseções que as acompanhavam. Tudo isso continua nos relatórios longos, em
+O artigo é deliberadamente visual: quem explica o método são as figuras e suas
+legendas, e a prosa entre elas é curta. A curva do cotovelo é a única figura do
+trabalho que ficou de fora, porque o texto já resume o que ela mostra (nem a
+inércia nem a silhueta indicam um k natural). Os relatórios longos, em
 [`relatorio/`](../relatorio/relatorio.pdf) e
-[`gaussianos/`](../gaussianos/relatorio_gaussianos.pdf), e as figuras seguem
-sendo geradas em `saida/`.
+[`gaussianos/`](../gaussianos/relatorio_gaussianos.pdf), trazem a discussão
+completa.
+
+O `\FloatBarrier` antes da conclusão existe para as figuras não vazarem para
+depois das Referências — problema que aparece sempre que o texto é curto e as
+figuras são grandes.
 
 ## Compilar
 
@@ -39,7 +44,7 @@ principal.
 | `artigo.bib` | as sete referências |
 | `sbc-template.sty` | o estilo oficial da SBC, copiado sem alteração |
 | `sbc.bst` | o estilo de bibliografia da SBC, copiado sem alteração |
-| `figuras/` | as três figuras usadas, copiadas de `saida/` |
+| `figuras/` | as sete figuras usadas, copiadas de `saida/` e `gaussianos/saida/` |
 
 Os arquivos intermediários (`.aux`, `.log`, `.bbl`, `.blg`, `.out`) não são
 versionados.

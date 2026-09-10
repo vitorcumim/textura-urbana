@@ -1,5 +1,5 @@
 %%titulo: Segmentação de texturas urbanas com um banco de filtros orientados em três escalas
-%%autores: vitorcumim
+%%autores: Vitor Lorenzo Cumim
 %%curso: Visão Computacional — Trabalho 1
 %%data: setembro de 2026
 %%repo: https://github.com/vitorcumim/textura-urbana

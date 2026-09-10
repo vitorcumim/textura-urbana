@@ -38,10 +38,6 @@ versionados.
 
 ## Antes de entregar
 
-- **O autor está como `vitorcumim`**, que foi o nome pedido para os relatórios
-  anteriores. Em um artigo no formato SBC o normal é o nome civil — em
-  `artigo-cvss.tex`, seu artigo anterior, você assina "Vitor Cumim". Se quiser
-  trocar, é a linha `\author{}`.
 - **O endereço e o e-mail** foram preenchidos com UFPR e `vlc22@inf.ufpr.br`,
   tirados daquele mesmo artigo. Confira se o código da disciplina deve
   aparecer, como lá aparecia `CI1007 Segurança Computacional`.

@@ -1,5 +1,5 @@
 %%titulo: Trocando Gabor por derivadas de gaussiana no mesmo banco de textura
-%%autores: vitorcumim
+%%autores: Vitor Lorenzo Cumim
 %%curso: Visão Computacional — Trabalho 1 (variação do banco de filtros)
 %%data: setembro de 2026
 %%repo: https://github.com/vitorcumim/textura-urbana

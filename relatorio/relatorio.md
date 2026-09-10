@@ -3,7 +3,6 @@
 %%curso: Visão Computacional — Trabalho 1
 %%data: setembro de 2026
 %%repo: https://github.com/vitorcumim/textura-urbana
-%%nota: TROCAR a URL acima se o repositorio for publicado com outro usuario ou nome.
 
 ## Resumo
 

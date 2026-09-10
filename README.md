@@ -9,11 +9,6 @@ regiões semelhantes, tanto entre imagens quanto dentro de cada imagem.
 Relatório: [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf)
 (fonte em [`relatorio/relatorio.md`](relatorio/relatorio.md)).
 
-> **Antes de entregar:** a URL do repositório no cabeçalho do relatório é um
-> palpite (`https://github.com/vitorcumim/textura-urbana`). Depois de publicar,
-> corrija a linha `%%repo:` em `relatorio/relatorio.md` e rode
-> `python relatorio/gerar_pdf.py` de novo.
-
 ## Rodar
 
 ```

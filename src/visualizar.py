@@ -11,6 +11,7 @@ Gera em saida/:
     fig2_respostas.png      uma imagem e seus 21 mapas de resposta
     fig3_cotovelo.png       inercia e silhueta em funcao de k
     fig4_grupos.png         as 40 imagens organizadas pelos grupos achados
+    fig4b_grupos_compacto.png  o mesmo, deitado, para artigos curtos
     fig5_pca.png            as 40 imagens projetadas em 2D (PCA)
     fig6_matriz.png         matriz classe da foto x grupo do k-medias
     fig7_segmentacao.png    segmentacao por janela dentro das imagens
@@ -126,10 +127,16 @@ def fig_cotovelo(xn, classes):
 
 
 # ------------------------------------------------------------------ figura 4
-def fig_grupos(rot, nomes, k):
-    cols = 8
+def fig_grupos(rot, nomes, k, cols=8, nome="fig4_grupos.png", lado=1.6):
+    """
+    Montagem das imagens agrupadas.
+
+    cols controla o formato: com 8 colunas sai uma figura em pe, boa para
+    ocupar uma pagina inteira; com 12 sai deitada, que e o que cabe junto do
+    texto em um artigo curto.
+    """
     linhas = [max(1, int(np.ceil((rot == g).sum() / cols))) for g in range(k)]
-    fig = plt.figure(figsize=(cols * 1.6, sum(linhas) * 1.8 + 0.6))
+    fig = plt.figure(figsize=(cols * lado, sum(linhas) * (lado + 0.2) + 0.6))
     gs = fig.add_gridspec(sum(linhas), cols, hspace=0.28, wspace=0.06,
                           top=0.955, bottom=0.01, left=0.03, right=0.99)
     linha = 0
@@ -150,7 +157,40 @@ def fig_grupos(rot, nomes, k):
         linha += linhas[g]
     fig.suptitle("As 40 imagens organizadas pelos %d grupos do k-medias "
                  "(cor da moldura = grupo)" % k, fontsize=13, y=0.99)
-    salvar(fig, "fig4_grupos.png")
+    salvar(fig, nome)
+
+
+def fig_grupos_compacto(rot, nomes, k, cols=10):
+    """
+    A mesma informacao de fig_grupos, mas em fluxo continuo.
+
+    Em fig_grupos cada grupo ocupa uma linha inteira, o que deixa a figura
+    alta -- a altura passa a ser o numero de GRUPOS, nao o de imagens, e
+    grupos de uma imagem so desperdicam uma linha quase vazia. Aqui as 40
+    imagens sao dispostas em sequencia, ordenadas por grupo; quem separa um
+    grupo do outro e a cor da moldura e o rotulo embaixo. Com 10 colunas saem
+    4 linhas, e a figura fica deitada, cabendo junto do texto.
+    """
+    ordem = np.argsort(rot, kind="stable")
+    linhas = int(np.ceil(len(ordem) / cols))
+    fig, ax = plt.subplots(linhas, cols, figsize=(cols * 1.25, linhas * 1.45))
+    for eixo in ax.ravel():
+        eixo.axis("off")
+    for pos, i in enumerate(ordem):
+        a = ax.ravel()[pos]
+        a.axis("on")
+        a.imshow(cv2.imread(os.path.join(IMGS, nomes[i] + ".png"), 0), cmap="gray")
+        a.set_xticks([])
+        a.set_yticks([])
+        for s in a.spines.values():
+            s.set_color(CORES[rot[i] % len(CORES)])
+            s.set_linewidth(3.5)
+        a.set_xlabel("G%d %s" % (rot[i], nomes[i].replace("paralelepipedo", "paralel")),
+                     fontsize=6, labelpad=2, color=CORES[rot[i] % len(CORES)])
+    fig.suptitle("As 40 imagens ordenadas pelos %d grupos do k-medias "
+                 "(cor da moldura = grupo)" % k, fontsize=12)
+    fig.subplots_adjust(wspace=0.06, hspace=0.32, top=0.92, bottom=0.02)
+    salvar(fig, "fig4b_grupos_compacto.png")
 
 
 # ------------------------------------------------------------------ figura 5
@@ -287,6 +327,7 @@ def main():
     fig_respostas()
     fig_cotovelo(xn, classes)
     fig_grupos(rot, nomes, ki)
+    fig_grupos_compacto(rot, nomes, ki)
     fig_pca(xn, rot, nomes)
     fig_matriz(rot, classes, ki)
     fig_segmentacao(kb)

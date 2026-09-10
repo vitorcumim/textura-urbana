@@ -147,10 +147,10 @@ distância seria dominada pelas dimensões de energia. Nem a inércia nem a
 silhueta indicam um k natural --- as texturas urbanas formam um contínuo ---
 então adotou-se k = 8, o número de materiais, que dá pureza 0,575.
 
-\begin{figure}[p]
+\begin{figure}[htb]
 \centering
-\includegraphics[width=\textwidth]{figuras/fig4_grupos.png}
-\caption{As 40 imagens organizadas pelos oito grupos. Os grupos são coerentes
+\includegraphics[width=\textwidth]{figuras/fig4b_grupos_compacto.png}
+\caption{As 40 imagens ordenadas pelos oito grupos. Os grupos são coerentes
   como textura ainda quando não coincidem com o material: G6 junta as cinco
   britas com concretos granulados e pedra rugosa, todos granulação grossa sem
   direção; G4 junta tijolo, calçada em blocos e telha em fiada, todos
@@ -179,14 +179,9 @@ G7 & 4 & placas grandes e lisas separadas por juntas largas \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.75\textwidth]{figuras/fig6_matriz.png}
-\caption{Classe da foto contra grupo encontrado. As telhas se partem em três
-  grupos, porque telha de frente, em diagonal e empilhada são texturas
-  diferentes com o mesmo nome --- um erro de etiqueta, não de método.}
-\label{fig:matriz}
-\end{figure}
+As telhas se partem em três grupos, porque telha de frente, em diagonal e
+empilhada são texturas diferentes com o mesmo nome --- um erro de etiqueta,
+não de método.
 
 \section{Segmentação}
 
@@ -201,32 +196,17 @@ k = 6, dá a cada janela o rótulo do grupo mais próximo.
 \label{fig:segmentacao}
 \end{figure}
 
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.85\textwidth]{figuras/fig7b_detalhe.png}
-\caption{É o resultado mais fácil de auditar a olho: as frestas entre as ripas
-  de madeira, o rejunte entre as pedras e a junta entre as placas de concreto
-  saem separados das superfícies vizinhas. O mapa é grosseiro por construção,
-  com limites em degraus de 32 px.}
-\label{fig:detalhe}
-\end{figure}
+É o resultado mais fácil de auditar a olho: as frestas entre as ripas de
+madeira, o rejunte entre as pedras e a junta entre as placas de concreto saem
+separados das superfícies vizinhas. O mapa é grosseiro por construção, com
+limites em degraus de 32 px.
 
-\section{Trocando o banco de filtros}
-
-Todo o \textit{pipeline} foi repetido com derivadas de gaussiana no lugar dos
-Gabor, mantendo idênticos o conjunto, a pirâmide, o descritor e o agrupamento.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=0.95\textwidth]{figuras/comparacao.png}
-\caption{Os dois bancos e o corte do espectro do filtro de linha a 0 graus de
-  cada um. O Gabor é mais seletivo --- 1,2 oitavas contra 1,8 --- mas por
-  margem modesta. Resultado: mesma pureza, e 39 das 40 imagens ficam no mesmo
-  grupo. O descritor descarta a diferença, porque a média do módulo numa
-  janela de 64x64, normalizada pela energia, dá quase o mesmo número vindo de
-  filtros diferentes.}
-\label{fig:comparacao}
-\end{figure}
+Todo o \textit{pipeline} foi ainda repetido com derivadas de gaussiana no
+lugar dos Gabor, mantendo idênticos o conjunto, a pirâmide, o descritor e o
+agrupamento. A troca quase não muda nada: mesma pureza, e 39 das 40 imagens
+ficam no mesmo grupo. O descritor descarta a diferença entre os bancos, porque
+a média do módulo numa janela de 64x64, normalizada pela energia, dá quase o
+mesmo número vindo de filtros diferentes.
 
 \FloatBarrier
 

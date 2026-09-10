@@ -6,7 +6,7 @@ aplicado em três escalas de uma pirâmide gaussiana, gerando um descritor de
 **24 dimensões** por região. Um k-médias euclidiano escrito à mão agrupa as
 regiões semelhantes, tanto entre imagens quanto dentro de cada imagem.
 
-Relatório para entrega, no template da SBC (8 páginas, 7 figuras):
+Relatório para entrega, no template da SBC (5 páginas):
 [`latex/artigo.pdf`](latex/artigo.pdf) (fonte em [`latex/`](latex/README.md)).
 Há também uma versão em markdown que gera PDF sem LaTeX,
 [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf).

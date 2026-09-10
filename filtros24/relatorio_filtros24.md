@@ -1,6 +1,6 @@
-%%titulo: 24 filtros de textura em 3 escalas, aplicados a 32 imagens urbanas
+%%titulo: Segmentação de texturas urbanas com um banco de 24 filtros em três escalas
 %%autores: Vitor Lorenzo Cumim
-%%curso: Visão Computacional — Trabalho 1 (versão de 24 filtros)
+%%curso: Visão Computacional — Trabalho 1
 %%data: setembro de 2026
 %%repo: https://github.com/vitorcumim/textura-urbana
 
@@ -52,15 +52,6 @@ O mesmo k-médias sobre as 7.200 janelas de 64×64 de todas as imagens, com k = 
 ![Acima as originais, abaixo o mapa de grupos sobreposto. Em tijolo_00 as juntas de argamassa saem em laranja, separadas das faces dos tijolos; em paralelepipedo_00 uma pedra de granulação diferente se destaca das vizinhas; em concreto_00 as duas regiões de granulação distinta são separadas.](saida/segmentacao.png)
 
 Vale notar uma diferença em relação às outras versões deste trabalho, que usam pirâmide em vez de filtros grandes. Filtrar a imagem cheia com núcleos de 41×41 suaviza bastante: em `madeira_00` as frestas estreitas entre as ripas, que a versão com pirâmide separava, aqui somem dentro do borrão do filtro maior. Em compensação os mapas ficam menos pipocados. É um dos dois lados do mesmo compromisso.
-
-## 6. Como rodar
-
-```
-pip install opencv-python numpy matplotlib
-python filtros24/textura24.py
-```
-
-Um arquivo só, `filtros24/textura24.py`, faz tudo o que está descrito aqui e escreve as três figuras em `filtros24/saida/`. As imagens são lidas de `imagens/`, já preparadas pela versão completa do trabalho, em `src/`.
 
 ## Referências
 
